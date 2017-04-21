@@ -6,3 +6,5 @@ tile type enum
 1: entrance
 2: exit
 3: grass
+4: left
+5: right
