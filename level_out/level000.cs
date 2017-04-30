@@ -8,12 +8,12 @@ public partial class Maze {
     public void Level000 () {
         sizeX = 2;
         sizeZ = 2;
-        delta = new IntVector2 (1, 0);
         cells = new MazeCell[sizeX, sizeZ];
+        moves = new List<int>() { 8, 16 };
 
-
-        CreateCell (new IntVector2 (0, 0), 2049);
-        CreateCell (new IntVector2 (1, 0), 2052);
-        CreateCell (new IntVector2 (1, 1), 2);
+        CreateCell (new IntVector2 (0, 0), 1, 2048);
+        CreateCell (new IntVector2 (1, 0), 4, 2048);
+        CreateCell (new IntVector2 (1, 1), 2, 0);
+        AddEntrance (new IntVector2 (0, 0), new IntVector2 (1, 0));
    }
 }

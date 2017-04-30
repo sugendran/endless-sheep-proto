@@ -18,9 +18,8 @@ function convertFile(filename) {
     const data = require(infile);
     const sizeZ = data.map.length;
     const sizeX = data.map[0].length;
-    const dx = data.dx;
-    const dz = data.dz;
     const level = basename.slice(-3);
+    const moves = data.moves.join(", ");
     let output = [
 `/* Generated from JSON */
 using System.Collections;
@@ -32,9 +31,8 @@ public partial class Maze {
     public void Level${level} () {
         sizeX = ${sizeX};
         sizeZ = ${sizeZ};
-        delta = new IntVector2 (${dx}, ${dz});
         cells = new MazeCell[sizeX, sizeZ];
-
+        moves = new List<int>() { ${moves} };
 `
     ];
     for (let z = 0; z < sizeZ; z++) {
@@ -42,9 +40,14 @@ public partial class Maze {
             const val = data.map[z][x];
             const rot = data.rotations[z][x];
             if (val !== 0)
-                output.push(`        CreateCell (new IntVector2 (${x}, ${z}), ${val|rot});`);
+                output.push(`        CreateCell (new IntVector2 (${x}, ${z}), ${val}, ${rot});`);
         }
     }
+    for (let i=0, ii=data.entrances.length; i<ii; i++) {
+        const val = data.entrances[i];
+        output.push(`        AddEntrance (new IntVector2 (${val.x}, ${val.z}), new IntVector2 (${val.dx}, ${val.dz}));`);
+    }
+
     output.push("   }\n}\n");
 
     fs.writeFileSync(outfile, output.join("\n"));
