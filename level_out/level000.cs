@@ -8,6 +8,8 @@ public partial class Maze {
     public void Level000 () {
         sizeX = 2;
         sizeZ = 2;
+        totalSheep = 3;
+        requiredSheep = 1;
         cells = new MazeCell[sizeX, sizeZ];
         moves = new List<int>() { 8, 16 };
 

@@ -1,4 +1,6 @@
 {
+	"totalSheep": 3,
+	"requiredSheep": 1,
 	"entrances": [{
 		"x": 0,
 		"z": 0,

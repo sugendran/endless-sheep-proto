@@ -67,6 +67,7 @@ function game(canvas) {
     var modifier_exit = new Modifier('B', () => null);
     var modifier_turn_right = new Modifier('\u21b1', (sheep) => sheep.turnRight());
     var modifier_turn_left = new Modifier('\u21b0', (sheep) => sheep.turnLeft());
+    var modifier_jump = new Modifier('J', (sheep) => sheep.jump());
 
     function Sheep(x, y, dx, dy) {
         this.x = x;
@@ -74,6 +75,7 @@ function game(canvas) {
         this.dx = dx;
         this.dy = dy;
         this.alive = true;
+        this.isJumping = false;
     }
     Sheep.prototype.draw = function(ctx) {
         ctx.strokeText(this.char(),
@@ -118,6 +120,9 @@ function game(canvas) {
             this.dx = 0;
         }
     };
+    Sheep.prototype.jump = function () {
+        this.isJumping = true;
+    }
 
     function addSheep() {
         [...entrances].forEach(entrance => {
@@ -144,10 +149,15 @@ function game(canvas) {
             creatures.delete(oldCoord);
             return;
         }
-        if (map.get(oldCoord).modifier) {
-            map.get(oldCoord).modifier.action(sheep);
+        var wasJumping = sheep.isJumping;
+        if (sheep.isJumping) {
+            sheep.isJumping = false;
         }
-        if (exits.has(oldCoord)) {
+        var moddy = map.get(oldCoord).modifier;
+        if (moddy) {
+            moddy.action(sheep);
+        }
+        if (exits.has(oldCoord) && !wasJumping) {
             console.log("WIN: " + (++score));
             creatures.delete(oldCoord);
             return;
@@ -158,7 +168,7 @@ function game(canvas) {
 
         if (map.has(newCoord) === false) {
             sheep.alive = false;
-        } else if (creatures.has(newCoord)) {
+        } else if (creatures.has(newCoord) && !creatures.get(newCoord).isJumping) {
             // need to reverse
             sheep.reverse();
             return;
@@ -195,6 +205,8 @@ function game(canvas) {
                     modifier = modifier_turn_left;
                 } else if((val & ModifierTurnRight) === ModifierTurnRight) {
                     modifier = modifier_turn_right;
+                } else if((val & ModifierJump) === ModifierJump) {
+                    modifier = modifier_jump;
                 } else if((val & ModifierEntrance) === ModifierEntrance) {
                     modifier = modifier_entrance;
                     entrances.add(coord);
@@ -227,28 +239,42 @@ var g = game(
     document.getElementById("board")
 )
 
-g.loadLevel({
+var gameData = {
+	"totalSheep": 3,
+	"requiredSheep": 1,
 	"entrances": [{
 		"x": 1,
 		"z": 0,
 		"dx": 0,
 		"dz": 1
 	},{
-		"x": 1,
-		"z": 3,
-		"dx": 0,
-		"dz": -1
+		"x": 2,
+		"z": 2,
+		"dx": -1,
+		"dz": 0
 	}],
+	"moves": [
+		8,
+		16
+	],
     "map": [
         [0, 1, 0],
-        [0, 8, 2],
-        [2, 8, 0],
-        [0, 1, 0]
+        [0, 32, 0],
+        [2, 4, 1],
+		[0, 4, 0],
+        [0, 2, 0]
     ],
     "rotations": [
         [2048, 0, 2048],
         [0, 0, 0],
         [1024, 0, 256],
+		[1024, 0, 256],
         [0, 0, 0]
     ]
-});
+};
+var urlData = location.search.substr(1);
+if(urlData !== "") {
+    gameData = JSON.parse(decodeURIComponent(urlData));
+}
+
+g.loadLevel(gameData);

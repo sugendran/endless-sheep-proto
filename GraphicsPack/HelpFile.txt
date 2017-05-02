@@ -1,0 +1,16 @@
+     This is the Graphical User Interface (GUI) pack for 2D games. Suitable with all IOS ( IPhone & IPad) and Android devaices.
+     All in vector so you can easy scale it without losing quality.
+
+    Folder contains:
+- Ai file ;
+- EPS file ;
+- PDF file ;
+- JPG file ;
+- Transparent PNG file (3 files);
+- Free font used: Odin Rounded ;
+
+     You will get all that you see in preview image and level buttons for 20 levels with one star, two stars, three stars and without stars.
+
+      If you have some questions, please write on my email yurkaq@gmail.com.
+
+      Hope you like it.

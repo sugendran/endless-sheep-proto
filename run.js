@@ -20,6 +20,8 @@ function convertFile(filename) {
     const sizeX = data.map[0].length;
     const level = basename.slice(-3);
     const moves = data.moves.join(", ");
+    const totalSheep = data.totalSheep;
+    const requiredSheep = data.requiredSheep;
     let output = [
 `/* Generated from JSON */
 using System.Collections;
@@ -31,6 +33,8 @@ public partial class Maze {
     public void Level${level} () {
         sizeX = ${sizeX};
         sizeZ = ${sizeZ};
+        totalSheep = ${totalSheep};
+        requiredSheep = ${requiredSheep};
         cells = new MazeCell[sizeX, sizeZ];
         moves = new List<int>() { ${moves} };
 `

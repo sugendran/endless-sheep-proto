@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            #editor {
+                position: absolute;
+                top:0;
+                left:0;
+                bottom: 0;
+                right: 50vw;
+                width: 50vw;
+            }
+            #preview {
+                position: absolute;
+                top:0;
+                left: 50vw;
+                right: 0;
+                bottom: 0;
+                width: 50vw;
+            }
+        </style>
+    </head>
+    <body>
+        <textarea id="editor">
+{
+	"entrances": [{
+		"x": 0,
+		"z": 0,
+		"dx": 1,
+		"dz": 0
+	}],
+	"moves": [
+		8,
+		16
+	],
+	"map": [
+		[1, 4],
+		[0, 2]
+	],
+	"rotations": [
+		[2048, 2048],
+		[0, 0]
+	]
+}
+        </textarea>
+        <iframe id="preview" src="index.html" frameborder="0" height="100%"></iframe>
+
+<script>
+
+    function debounce (func) {
+        var interval = 0;
+        var go = function() {
+            clearTimeout(interval);
+            interval = setTimeout(() => {
+                func();
+            }, 500);
+        }
+        return go;
+    }
+
+    var editor = document.getElementById("editor");
+    var preview = document.getElementById("preview");
+
+
+    editor.onkeypress = debounce(function () {
+        try {
+        var str = "index.html?" + encodeURIComponent(JSON.stringify(JSON.parse(editor.value)));
+        preview.src = str;
+        }catch(e) { }
+    });
+</script>
+
+    </body>
+</html>
