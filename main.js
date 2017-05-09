@@ -22,12 +22,13 @@ function game(canvas) {
     let score = 0;
     
 
-    function COORD(x, y) {
-        var key = `${x}:${y}`;
+    function COORD(x, y, z) {
+        var key = `${x}:${y}:${z}`;
         if (!___cords.hasOwnProperty(key)) {
             ___cords[key] = {
                 x,
-                y
+                y,
+                z
             };
         }
         return ___cords[key];
@@ -41,12 +42,12 @@ function game(canvas) {
         [...map].forEach(([coord, info]) => {
             ctx.fillStyle = info.fill;
             ctx.strokeStyle = info.stroke;
-            ctx.fillRect(coord.x * TILE_SIZE, coord.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            ctx.strokeRect(coord.x * TILE_SIZE, coord.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            ctx.strokeText(coord.x + "," + coord.y, (coord.x * TILE_SIZE), (coord.y * TILE_SIZE) + TILE_SIZE - QUARTER_TILE_SIZE);
+            ctx.fillRect(coord.x * TILE_SIZE, coord.z * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            ctx.strokeRect(coord.x * TILE_SIZE, coord.z * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            ctx.strokeText(coord.x + "," + coord.z, (coord.x * TILE_SIZE), (coord.z * TILE_SIZE) + TILE_SIZE - QUARTER_TILE_SIZE);
 
             if (info.modifier) {
-                info.modifier.draw(ctx, coord.x, coord.y);
+                info.modifier.draw(ctx, coord.x, coord.z);
             }
         });
         ctx.font = HALF_TILE_SIZE + 'px monospaced';
@@ -69,18 +70,19 @@ function game(canvas) {
     var modifier_turn_left = new Modifier('\u21b0', (sheep) => sheep.turnLeft());
     var modifier_jump = new Modifier('J', (sheep) => sheep.jump());
 
-    function Sheep(x, y, dx, dy) {
+    function Sheep(x, z, dx, dz) {
         this.x = x;
-        this.y = y;
+        this.z = z;
+        this.y = 0;
         this.dx = dx;
-        this.dy = dy;
+        this.dy = 0;
+        this.dz = dz;
         this.alive = true;
-        this.isJumping = false;
     }
     Sheep.prototype.draw = function(ctx) {
         ctx.strokeText(this.char(),
             (this.x * TILE_SIZE) + HALF_TILE_SIZE,
-            (this.y * TILE_SIZE) + HALF_TILE_SIZE);
+            (this.z * TILE_SIZE) + HALF_TILE_SIZE);
     };
     Sheep.prototype.char = function() {
         if (!this.alive) {
@@ -89,7 +91,7 @@ function game(canvas) {
             return '\u21a0';
         } else if (this.dx < 0) {
             return '\u219e';
-        } else if (this.dy < 0) {
+        } else if (this.dz < 0) {
             return '\u219f';
         } else {
             return '\u21a1';
@@ -99,29 +101,29 @@ function game(canvas) {
         if (this.dx !== 0) {
             this.dx = -this.dx;
         } else {
-            this.dy = -this.dy;
+            this.dz = -this.dz;
         }
     };
     Sheep.prototype.turnRight = function() {
         if (this.dx === 0) {
-            this.dx = -this.dy;
-            this.dy = 0;
+            this.dx = -this.dz;
+            this.dz = 0;
         } else {
-            this.dy = this.dx;
+            this.dz = this.dx;
             this.dx = 0;
         }
     };
     Sheep.prototype.turnLeft = function() {
         if (this.dx === 0) {
-            this.dx = this.dy;
-            this.dy = 0;
+            this.dx = this.dz;
+            this.dz = 0;
         } else {
-            this.dy = -this.dx;
+            this.dz = -this.dx;
             this.dx = 0;
         }
     };
     Sheep.prototype.jump = function () {
-        this.isJumping = true;
+        this.dy = 1;
     }
 
     function addSheep() {
@@ -130,45 +132,52 @@ function game(canvas) {
                 return;
             }
             var dir = entranceDirections.get(entrance);
-            var sheep = new Sheep(entrance.x, entrance.y, dir.dx, dir.dz);
+            var sheep = new Sheep(entrance.x, entrance.z, dir.dx, dir.dz);
             creatures.set(entrance, sheep);
         });
     }
 
     function adjustSheepLocation(coord, sheep) {
-        var oldCoord = COORD(sheep.x, sheep.y);
+        var oldCoord = COORD(sheep.x, sheep.y, sheep.z);
         sheep.x = coord.x;
         sheep.y = coord.y;
+        sheep.z = coord.z;
+        
         creatures.delete(oldCoord);
         creatures.set(coord, sheep);
     }
 
-    function moveSheep(sheep) {
-        var oldCoord = COORD(sheep.x, sheep.y);
+    function moveSheep(oldCoord, sheep) {
         if (!sheep.alive) {
             creatures.delete(oldCoord);
             return;
         }
-        var wasJumping = sheep.isJumping;
-        if (sheep.isJumping) {
-            sheep.isJumping = false;
+        var moddy = null;
+        if(map.get(oldCoord)) {
+            moddy = map.get(oldCoord).modifier;
         }
-        var moddy = map.get(oldCoord).modifier;
-        if (moddy) {
-            moddy.action(sheep);
+        if (sheep.y > 0) {
+            sheep.dy = -1;
+        } else {
+            sheep.dy = 0;
+            if (moddy) {
+                moddy.action(sheep);
+            }
         }
-        if (exits.has(oldCoord) && !wasJumping) {
+        if (exits.has(oldCoord)) {
             console.log("WIN: " + (++score));
             creatures.delete(oldCoord);
             return;
         }
         var newX = sheep.x + sheep.dx;
+        var newZ = sheep.z + sheep.dz;
         var newY = sheep.y + sheep.dy;
-        var newCoord = COORD(newX, newY);
+        var newCoord = COORD(newX, newY, newZ);
+        var groundedCoord = COORD(newX, 0, newZ);
 
-        if (map.has(newCoord) === false) {
+        if (map.has(groundedCoord) === false) {
             sheep.alive = false;
-        } else if (creatures.has(newCoord) && !creatures.get(newCoord).isJumping) {
+        } else if (creatures.has(newCoord)) {
             // need to reverse
             sheep.reverse();
             return;
@@ -179,7 +188,7 @@ function game(canvas) {
     var remainingSheep = 3;
 
     function moveSheeps() {
-        [...creatures].forEach(([coord, sheep]) => moveSheep(sheep));
+        [...creatures].forEach(([coord, sheep]) => moveSheep(coord, sheep));
         if (remainingSheep) {
             addSheep();
             remainingSheep--;
@@ -199,7 +208,7 @@ function game(canvas) {
             for (let x = 0; x < mapWidth; x++) {
                 let val = gameData.map[y][x];
                 if (val === 0) continue;
-                var coord = COORD(x, y);
+                var coord = COORD(x, 0, y);
                 var modifier = null;
                 if ((val & ModifierTurnLeft) === ModifierTurnLeft) {
                     modifier = modifier_turn_left;
@@ -224,7 +233,7 @@ function game(canvas) {
         }
         for(let i=0,ii=gameData.entrances.length; i<ii; i++) {
             var dir = gameData.entrances[i];
-            entranceDirections.set(COORD(dir.x, dir.z), dir);
+            entranceDirections.set(COORD(dir.x, 0, dir.z), dir);
         }
         console.log("Level Loaded");
         intervalTimer = setInterval(moveSheeps, 1000);

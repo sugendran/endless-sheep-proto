@@ -42,14 +42,13 @@ public partial class Maze {
     for (let z = 0; z < sizeZ; z++) {
         for (let x = 0; x < sizeX; x++) {
             const val = data.map[z][x];
-            const rot = data.rotations[z][x];
             if (val !== 0)
-                output.push(`        CreateCell (new IntVector2 (${x}, ${z}), ${val}, ${rot});`);
+                output.push(`        CreateCell (new IntVector3 (${x}, ${z}), ${val});`);
         }
     }
     for (let i=0, ii=data.entrances.length; i<ii; i++) {
         const val = data.entrances[i];
-        output.push(`        AddEntrance (new IntVector2 (${val.x}, ${val.z}), new IntVector2 (${val.dx}, ${val.dz}));`);
+        output.push(`        AddEntrance (new IntVector3 (${val.x}, ${val.z}), new IntVector3 (${val.dx}, ${val.dz}));`);
     }
 
     output.push("   }\n}\n");
