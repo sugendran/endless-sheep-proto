@@ -1,4 +1,4 @@
-{
+module.exports =  {
 	"totalSheep": 3,
 	"requiredSheep": 1,
 	"entrances": [{
@@ -30,4 +30,4 @@
 		[1024, 0, 256],
         [0, 0, 0]
     ]
-}
+};

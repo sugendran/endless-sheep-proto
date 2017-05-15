@@ -11,11 +11,11 @@ public partial class Maze {
         totalSheep = 3;
         requiredSheep = 1;
         cells = new MazeCell[sizeX, sizeZ];
-        moves = new List<int>() { 8, 16 };
+        moves = new List<int>() { 8, 16, 32 };
 
-        CreateCell (new IntVector2 (0, 0), 1);
-        CreateCell (new IntVector2 (1, 0), 4);
-        CreateCell (new IntVector2 (1, 1), 2);
-        AddEntrance (new IntVector2 (0, 0), new IntVector2 (1, 0));
+        CreateCell (new IntVector3 (0, 0), 1);
+        CreateCell (new IntVector3 (1, 0), 4);
+        CreateCell (new IntVector3 (1, 1), 2);
+        AddEntrance (new IntVector3 (0, 0), new IntVector3 (1, 0));
    }
 }

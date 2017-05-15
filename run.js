@@ -8,14 +8,16 @@ function capitalise(str) {
 }
 
 function isJSON(filename) {
-    return path.extname(filename) === ".json";
+    return path.extname(filename) === ".js";
 }
 
 function convertFile(filename) {
-    const basename = path.basename(filename, ".json")
+    const basename = path.basename(filename, ".js")
     const infile = path.join(indir, filename);
     const outfile = path.join(outdir, capitalise(basename + ".cs"));
+    console.error(infile);
     const data = require(infile);
+    console.error(data);
     const sizeZ = data.map.length;
     const sizeX = data.map[0].length;
     const level = basename.slice(-3);
