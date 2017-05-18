@@ -1,79 +1,128 @@
 <!DOCTYPE html>
-<html class="no-js">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            #editor {
-                position: absolute;
-                top:0;
-                left:0;
-                bottom: 0;
-                right: 50vw;
-                width: 50vw;
-            }
-            #preview {
-                position: absolute;
-                top:0;
-                left: 50vw;
-                right: 0;
-                bottom: 0;
-                width: 50vw;
-            }
-        </style>
-    </head>
-    <body>
-        <textarea id="editor">
-{
-	"entrances": [{
-		"x": 0,
-		"z": 0,
-		"dx": 1,
-		"dz": 0
-	}],
-	"moves": [
-		8,
-		16
-	],
-	"map": [
-		[1, 4],
-		[0, 2]
-	],
-	"rotations": [
-		[2048, 2048],
-		[0, 0]
-	]
-}
-        </textarea>
-        <iframe id="preview" src="index.html" frameborder="0" height="100%"></iframe>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="node_modules/skeleton-css/css/normalize.css">
+	<link rel="stylesheet" href="node_modules/skeleton-css/css/skeleton.css">
+	<style>
+		.grid td {
+			padding: 0;
+		}
+		.grid select {
+			width: 50px;
+			height: 50px;
+			margin: 0;
+		}
+		.grid select {
+			background:green;
+			font-family: Arial, Helvetica, sans-serif;
+		}
+		.grid select.modifier-0 {
+			background: black;
+		}
+		.grid select.modifier-4 {
+			content: "&#10058;";
+		}
+		
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="two columns">Grid</div>
+			<div class="five columns">
+				<label for="width">Width (X)</label>
+				<input class="u-full-width" type="number" value="5" id="width" onchange="onGridSizeChanged()">
+			</div>
+			<div class="five columns">
+				<label for="height">Height (X)</label>
+				<input class="u-full-width" type="number" value="5" id="height" onchange="onGridSizeChanged()">
+			</div>
+		</div>
+		<div class="row">
+			<div class="u-full-width" id="grid"></div>
+		</div>
+		<div class="row">
+			<div class="two columns">JSON</div>
+			<div class="ten columns">
+				<textarea id="json"></textarea>
+			</div>
+		</div>
+	</div>
+	<script onload="onGridSizeChanged()">
+		var grid = [];
+		var modifiers = {
+			none: 0,
+			entrance: 1,
+			exit: 2,
+			grass: 4,
+			turnLeft: 8,
+			turnRight: 16,
+			jump: 32,
+			stop: 64
+		};
+		var modifiersDisplay = {
+			none: "&#8259;",
+			entrance: "E",
+			exit: "X",
+			grass: "&#10058;",
+			turnLeft: "&#8630;",
+			turnRight: "&#8631;",
+			jump: "&#10595;",
+			stop: 64
+		}
+		var optionsHTML = Object.keys(modifiers).reduce( (acc, n) => {
+			return acc + '<option value="' + modifiers[n] + '" ' + (n === "grass" ? "selected" : "") + '>' + modifiersDisplay[n] + '</option>';
+		}, "");
 
-<script>
+		function updateJSON() {
+			document.getElementById("json").innerText = JSON.stringify(grid);
+		}
 
-    function debounce (func) {
-        var interval = 0;
-        var go = function() {
-            clearTimeout(interval);
-            interval = setTimeout(() => {
-                func();
-            }, 500);
-        }
-        return go;
-    }
+		function redrawGrid() {
+			var html = ['<table class="grid">'];
+			for(var y=0, yy=grid.length; y<yy; y++) {
+				var row = ['<tr>'];
+				for(var x=0, xx=grid[y].length; x<xx; x++) {
+					row.push('<td>');
+					row.push('<select data-x="' + x + '" data-y="' + y + '" class="modifier-4" >');
+					row.push(optionsHTML);
+					row.push('</select>');
+					row.push('</td>');
+				}
+				row.push('</tr>');
+				html.push(row.join(""));
+			}
+			html.push('</table>');
+			var gridEl = document.getElementById("grid");
+			gridEl.innerHTML = html.join("");
+			var selects = gridEl.querySelectorAll("select");
+			for(var i=0, ii=selects.length; i<ii; i++) {
+				selects[i].onchange = onGridCellChanged;
+			}
+		 }
 
-    var editor = document.getElementById("editor");
-    var preview = document.getElementById("preview");
+		 function onGridCellChanged(e) {
+			 var x = parseInt(e.target.getAttribute('data-x'), 10);
+			 var y = parseInt(e.target.getAttribute('data-y'), 10);
+			 grid[y][x] = parseInt(e.target.value, 10);
+			 e.target.className = "modifier-" + e.target.value;
+			 updateJSON();
+		  }
 
-
-    editor.onkeypress = debounce(function () {
-        try {
-        var str = "index.html?" + encodeURIComponent(JSON.stringify(JSON.parse(editor.value)));
-        preview.src = str;
-        }catch(e) { }
-    });
-</script>
-
-    </body>
+		function onGridSizeChanged() {
+			var width = parseInt(document.getElementById("width").value, 10);
+			var height = parseInt(document.getElementById("height").value, 10);
+			grid = [];
+			for(var y=0; y<height; y++) {
+				grid.push([]);
+				for(var x=0; x<width; x++) {
+					grid[y].push(4);
+				}
+			}
+			redrawGrid();
+			updateJSON();
+		}
+	</script>
+</body>
 </html>

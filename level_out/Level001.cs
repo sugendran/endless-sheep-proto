@@ -11,7 +11,7 @@ public partial class Maze {
         totalSheep = 8;
         requiredSheep = 2;
         cells = new MazeCell[sizeX, sizeZ];
-        moves = new List<int>() { 8, 16, 32, 16, 32, 16 };
+        moves = new List<int>() { 8, 16, 8, 16 };
 
         CreateCell (new IntVector3 (0, 0), 1);
         CreateCell (new IntVector3 (1, 0), 4);

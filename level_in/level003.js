@@ -1,38 +1,30 @@
-module.exports =  {
-	"totalSheep": 3,
-	"requiredSheep": 1,
+var mod = require('../modifiers');
+
+module.exports = {
+	"totalSheep": 20,
+	"requiredSheep": 10,
 	"entrances": [{
-		"x": 0,
-		"z": 0,
+		"x": 3,
+		"z": 4,
 		"dx": 0,
-		"dz": 1
-	},{
-		"x": 6,
-		"z": 0,
-		"dx": -1,
-		"dz": 0
+		"dz": -1
 	}],
 	"moves": [
-		8,
-		8,
-		8,
-		8,
-		8
+		mod.turnLeft,
+		mod.turnRight,
+		mod.turnRight,
+		mod.turnRight,
+		mod.turnRight,
+		mod.turnRight,
+		mod.turnRight
 	],
 	"map": [
-		[1, 4, 4, 4, 4, 4, 1],
-		[4, 4, 0, 4, 0, 4, 4],
-		[4, 4, 4, 2, 4, 4, 4],
-		[4, 0, 4, 4, 4, 0, 4],
-		[4, 0, 0, 0, 0, 0, 4],
+		[4, 4, 4, 4, 4, 4, 4],
+		[4, 0, 0, 4, 0, 0, 4],
+		[4, 0, 0, 4, 0, 0, 4],
+		[4, 4, 4, 4, 4, 4, 4],
+		[4, 0, 0, 1, 0, 0, 4],
+		[4, 0, 0, 2, 0, 0, 4],
 		[4, 4, 4, 4, 4, 4, 4]
-	],
-	"rotations": [
-		[0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0]
 	]
 };

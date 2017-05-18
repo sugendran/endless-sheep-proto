@@ -7,6 +7,7 @@ function game(canvas) {
 	const ModifierTurnLeft = 8;
 	const ModifierTurnRight = 16;
 	const ModifierJump = 32;
+    const ModifierStop = 64;
 
     const TILE_SIZE = 60;
     const HALF_TILE_SIZE = TILE_SIZE / 2;
@@ -69,6 +70,7 @@ function game(canvas) {
     var modifier_turn_right = new Modifier('\u21b1', (sheep) => sheep.turnRight());
     var modifier_turn_left = new Modifier('\u21b0', (sheep) => sheep.turnLeft());
     var modifier_jump = new Modifier('J', (sheep) => sheep.jump());
+    var modifier_stop = new Modifier('S', (sheep) => sheep.stop());
 
     function Sheep(x, z, dx, dz) {
         this.x = x;
@@ -124,7 +126,11 @@ function game(canvas) {
     };
     Sheep.prototype.jump = function () {
         this.dy = 1;
-    }
+    };
+    Sheep.prototype.stop = function() {
+        this.dx = 0;
+        this.dy = 0;
+    };
 
     function addSheep() {
         [...entrances].forEach(entrance => {
@@ -216,6 +222,8 @@ function game(canvas) {
                     modifier = modifier_turn_right;
                 } else if((val & ModifierJump) === ModifierJump) {
                     modifier = modifier_jump;
+                } else if((val & ModifierStop) === ModifierStop) {
+                    modifier = modifier_stop;
                 } else if((val & ModifierEntrance) === ModifierEntrance) {
                     modifier = modifier_entrance;
                     entrances.add(coord);

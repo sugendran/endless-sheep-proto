@@ -5,7 +5,7 @@ module.exports = {
 	"requiredSheep": 1,
 	"entrances": [{
 		"x": 0,
-		"z": 0,
+		"z": 2,
 		"dx": 1,
 		"dz": 0
 	}],
@@ -14,7 +14,10 @@ module.exports = {
 		mod.turnRight
 	],
 	"map": [
-		[mod.entrance, mod.grass],
-		[mod.none, mod.exit]
+		[4, 4, 64, 4, 4],
+		[4, 4, 4, 4, 4],
+		[1, 4, 16, 4, 2],
+		[4, 4, 4, 4, 4],
+		[4, 4, 64, 4, 4]
 	]
 };

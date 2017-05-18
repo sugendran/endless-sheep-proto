@@ -12,9 +12,7 @@ module.exports =  {
 	"moves": [
 		mod.turnLeft,
         mod.turnRight,
-        mod.jump,
-        mod.turnRight,
-        mod.jump,
+        mod.turnLeft,
         mod.turnRight
 	],
     "map": [

@@ -1,33 +1,29 @@
+var mod = require('../modifiers');
+
 module.exports =  {
-	"totalSheep": 3,
-	"requiredSheep": 1,
+	"totalSheep": 5,
+	"requiredSheep": 4,
 	"entrances": [{
-		"x": 1,
+		"x": 2,
 		"z": 0,
 		"dx": 0,
 		"dz": 1
 	},{
-		"x": 2,
+		"x": 4,
 		"z": 2,
-		"dx": 0,
-		"dz": -1
+		"dx": -1,
+		"dz": 0
 	}],
 	"moves": [
-		8,
-		16
+		mod.turnLeft,
+		mod.turnRight,
+		mod.jump
 	],
     "map": [
-        [0, 1, 0],
-        [0, 4, 0],
-        [2, 4, 1],
-		[0, 32, 0],
-        [0, 2, 0]
-    ],
-    "rotations": [
-        [2048, 0, 2048],
-        [0, 0, 0],
-        [1024, 0, 256],
-		[1024, 0, 256],
-        [0, 0, 0]
+        [0, 0, 1,  0, 0],
+        [0, 4, 4, 4, 0],
+        [2, 4, 4,  4, 1],
+		[0, 4, 4, 4, 0],
+        [0, 0, 2,  0, 0],
     ]
 };

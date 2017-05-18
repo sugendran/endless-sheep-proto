@@ -5,5 +5,6 @@ module.exports = {
     grass: 4,
     turnLeft: 8,
     turnRight: 16,
-    jump: 32
+    jump: 32,
+    stop: 64
 }
