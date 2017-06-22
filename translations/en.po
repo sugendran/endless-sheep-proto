@@ -1,0 +1,77 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-06-16 21:34+0100\n"
+"PO-Revision-Date: 2017-06-16 21:46+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.2\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en\n"
+
+#: strings.js:1
+msgid "Endless Sheep"
+msgstr ""
+
+#: strings.js:2
+msgid "Sheep Saved"
+msgstr ""
+
+#: strings.js:3
+msgid "NEW HIGH SCORE"
+msgstr ""
+
+#: strings.js:4
+msgid "GAME OVER"
+msgstr ""
+
+#: strings.js:5
+msgid "LEVEL COMPLETE"
+msgstr ""
+
+#: strings.js:6
+msgid "GET READY !"
+msgstr ""
+
+#: strings.js:7
+msgid "3"
+msgstr ""
+
+#: strings.js:8
+msgid "2"
+msgstr ""
+
+#: strings.js:9
+msgid "1"
+msgstr ""
+
+#: strings.js:10
+msgid "Drag the actions on to the grass"
+msgstr ""
+
+#: strings.js:11
+msgid ""
+"Thanks for playing. Additional levels are under construction. In the mean "
+"time, please tell your friends about the game."
+msgstr ""
+
+#: strings.js:12
+msgid "drag actions onto the grass"
+msgstr ""
+
+#: strings.js:13
+msgid "Lost"
+msgstr ""
+
+#: strings.js:14
+msgid "Score"
+msgstr ""
